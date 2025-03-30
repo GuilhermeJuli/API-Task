@@ -3,12 +3,18 @@ package br.com.treinaJava.twtodos.models;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Todo {
@@ -17,55 +23,71 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Título não pode ser vazio")
+    @Size(min = 3, max = 100, message = "Título deve ter entre 3 e 100 caracteres")
     @Column(length = 100, nullable = false)
     private String title;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable=false)
-    private LocalDate deadLine;
+    @FutureOrPresent(message = "Data de entrega não pode ser no passado")
+    @NotNull(message = "Data de entrega não pode ser nula")
+    @Column(nullable = false)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate deadline;
+    
 
-    @Column(nullable=true)
-    private LocalDate finesheadAt;
+    @Column(nullable = true)
+    private LocalDate finishedAt;
 
-
-
-    public Todo () {
+    public Todo() {
         this.createdAt = LocalDateTime.now();
+    }
+    public void finish() {
+        this.finishedAt = LocalDate.now();
     }
 
 
+    public Long getId() {
+        return id;
+    }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-
+    public String getTitle() {
+        return title;
+    }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-
-
-    public void setDeadLine(LocalDate deadLine) {
-        this.deadLine = deadLine;
+    public LocalDate getDeadline() {
+        return deadline;
     }
 
-
-
-    public void setFinesheadAt(LocalDate finesheadAt) {
-        this.finesheadAt = finesheadAt;
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
     }
 
+    public LocalDate getFinishedAt() {
+        return finishedAt;
+    }
 
+    public void setFinishedAt(LocalDate finishedAt) {
+        this.finishedAt = finishedAt;
+    }
 
     @Override
     public int hashCode() {
@@ -74,8 +96,6 @@ public class Todo {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
-
-
 
     @Override
     public boolean equals(Object obj) {
@@ -96,16 +116,12 @@ public class Todo {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Todo{");
-        sb.append("id=").append(id);
-        sb.append(", title=").append(title);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", deadLine=").append(deadLine);
-        sb.append(", finesheadAt=").append(finesheadAt);
-        sb.append('}');
-        return sb.toString();
+        return "Todo{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", createdAt=" + createdAt +
+                ", deadline=" + deadline +
+                ", finishedAt=" + finishedAt +
+                '}';
     }
-    
-    
 }

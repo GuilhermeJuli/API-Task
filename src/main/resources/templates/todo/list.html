@@ -1,0 +1,48 @@
+<!doctype html>
+<html th:replace="~{base :: layout(~{::title}, ~{::main})}">
+  <head>
+    <title>Gestão Ponto Com</title>
+  </head>
+  <body>
+    <main>
+            <h1>Lista de Tarefas</h1>
+            <table class="table table-dark table-striped" th:unless="${#lists.isEmpty(todos)}">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Criado em</th>
+                    <th scope="col">Data de Entrega</th>
+                    <th scope="col">Finalizado</th>
+                    <th scope="col">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="todo : ${todos}">
+                    <th scope="row" th:text="${todo.id}"></th>
+                    <td th:text="${todo.title}"></td>
+                    <td th:text="${#temporals.format(todo.createdAt)}"></td>
+                    <td th:text="${#temporals.format(todo.deadline)}"></td>
+                    <td th:text="${#temporals.format(todo.finishedAt)} ?: 'EM ANDAMENTO'"></td>
+                    <td>
+                      <a th:href="@{edit/{id}(id=${todo.id})}" 
+                      class="btn btn-primary"
+                      th:classappend="${todo.finishedAt != null} ? 'disabled'">
+                      >Editar</a>      
+                      <form class="d-inline form" th:action="@{finish/{id}(id=${todo.id})}" method="post">
+                        <button 
+                        type="submit" 
+                        class="btn btn-success"
+                        th:classappend="${todo.finishedAt != null} ? 'disabled'">
+                        Finalizar</button>
+                    </form>
+                    <a th:href="@{delete/{id}(id=${todo.id})}" onclick="return confirm('Comfirmar exclusão da tarefa?')" class="btn btn-danger">Excluir</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p th:if="${#lists.isEmpty(todos)}">Nenhuma Tarefa Encontrada!!</p>
+                <a th:href="@{/create}" class="btn btn-primary">Nova Tarefa</a>
+    </main>    
+  </body>
+</html>
