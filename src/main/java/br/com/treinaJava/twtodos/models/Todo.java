@@ -36,8 +36,11 @@ public class Todo {
     @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate deadline;
-    
 
+    @Column(nullable = false)
+    @Size(min = 3, max = 500, message = "Descrição deve ter entre 3 e 500 caracteres")
+    private String description;
+    
     @Column(nullable = true)
     private LocalDate finishedAt;
 
@@ -89,6 +92,10 @@ public class Todo {
         this.finishedAt = finishedAt;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -123,5 +130,8 @@ public class Todo {
                 ", deadline=" + deadline +
                 ", finishedAt=" + finishedAt +
                 '}';
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -14,6 +14,7 @@
                     <th scope="col">Criado em</th>
                     <th scope="col">Data de Entrega</th>
                     <th scope="col">Finalizado</th>
+                    <th scope="col">Descrição</th>
                     <th scope="col">Ações</th>
                   </tr>
                 </thead>
@@ -24,6 +25,7 @@
                     <td th:text="${#temporals.format(todo.createdAt)}"></td>
                     <td th:text="${#temporals.format(todo.deadline)}"></td>
                     <td th:text="${#temporals.format(todo.finishedAt)} ?: 'EM ANDAMENTO'"></td>
+                    <td th:text="${todo.description}"></td>
                     <td>
                       <a th:href="@{edit/{id}(id=${todo.id})}" 
                       class="btn btn-primary"
@@ -33,7 +35,8 @@
                         <button 
                         type="submit" 
                         class="btn btn-success"
-                        th:classappend="${todo.finishedAt != null} ? 'disabled'">
+                        th:classappend="${todo.finishedAt != null} ? 'disabled'"
+                        onclick="return confirm('Comfirmar finalização da tarefa?')">
                         Finalizar</button>
                     </form>
                     <a th:href="@{delete/{id}(id=${todo.id})}" onclick="return confirm('Comfirmar exclusão da tarefa?')" class="btn btn-danger">Excluir</a>
